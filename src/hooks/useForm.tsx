@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface FormValues {
-  [key: string]: string;
+  [key: string]: string | string[];
 }
 
 interface FormErrors {
@@ -46,7 +46,7 @@ const useForm = ({
     setLoading(true);
     try {
       const results = await searchMethod(value);
-      setSearchResults(results);
+      setSearchResults([...results, value]);
     } catch (error) {
       console.error('Error during search:', error);
     } finally {
@@ -54,7 +54,9 @@ const useForm = ({
     }
   };
 
-  const debouncedSearch = debounce(handleSearch, 300);
+  const resetResults = () => setSearchResults([]);
+
+  const debouncedSearch = debounce(handleSearch, 200);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -63,9 +65,35 @@ const useForm = ({
       [name]: value,
     });
 
-    if (searchMethod && name === 'search') {
+    if (searchMethod && name.includes('search') && value) {
       debouncedSearch(value);
     }
+  };
+
+  const resetValue = (name: string) => setValues({ ...values, [name]: '' });
+
+  const updateArray = (
+    name: string,
+    item: string,
+    action: 'add' | 'remove'
+  ) => {
+    setValues((prevValues) => {
+      const currentValue = prevValues[name];
+
+      const isArray = Array.isArray(currentValue);
+
+      if (isArray) {
+        const newValues = {
+          ...prevValues,
+          [name]:
+            action === 'add'
+              ? [...currentValue, item]
+              : currentValue.filter((i) => i !== item),
+        };
+        return newValues;
+      }
+      return prevValues;
+    });
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -79,12 +107,15 @@ const useForm = ({
   };
 
   return {
-    values,
     errors,
+    updateArray,
     handleChange,
     handleSubmit,
-    searchResults,
     loading,
+    resetResults,
+    resetValue,
+    searchResults,
+    values,
   };
 };
 

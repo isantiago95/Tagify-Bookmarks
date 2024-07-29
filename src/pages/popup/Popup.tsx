@@ -1,5 +1,5 @@
 import React from 'react';
-import Form from './components/Form';
+import BookmarkForm from './components/BookmarkForm';
 import bookmarksApi from '../../API/BookmarksApi';
 import { FormPopupFormProps } from '../../interfaces/BookmarkProps';
 
@@ -50,7 +50,7 @@ const Popup = (): JSX.Element => {
         />
       </div>
 
-      <Form currentTab={currentTab} />
+      <BookmarkForm currentTab={currentTab} />
     </div>
   );
 };
