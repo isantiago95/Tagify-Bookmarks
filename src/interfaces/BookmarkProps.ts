@@ -17,3 +17,8 @@ export interface FormPopupFormProps {
     favIconUrl?: string;
   };
 }
+
+export interface BookmarkFormProps
+  extends Omit<chrome.bookmarks.BookmarkTreeNode, 'id'> {
+  id?: string;
+}

@@ -26,6 +26,7 @@ class TagManagerApi {
       }
     });
   }
+
   // Method to add a bookmark ID to a tag
   public addBookmarkToTag(tagName: string, bookmarkId: number): void {
     if (!this.tags[tagName]) {

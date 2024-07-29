@@ -41,6 +41,13 @@ const useForm = ({
     };
   };
 
+  const updateInitialValues = (newInitialValues: FormValues) => {
+    setValues({ ...values, ...newInitialValues });
+    setErrors({});
+    setSearchResults([]);
+    setLoading(false);
+  };
+
   const handleSearch = async (value: string) => {
     if (!searchMethod) return;
     setLoading(true);
@@ -87,7 +94,7 @@ const useForm = ({
           ...prevValues,
           [name]:
             action === 'add'
-              ? [...currentValue, item]
+              ? Array.from(new Set([...currentValue, item]))
               : currentValue.filter((i) => i !== item),
         };
         return newValues;
@@ -108,13 +115,14 @@ const useForm = ({
 
   return {
     errors,
-    updateArray,
     handleChange,
     handleSubmit,
     loading,
     resetResults,
     resetValue,
     searchResults,
+    updateArray,
+    updateInitialValues,
     values,
   };
 };

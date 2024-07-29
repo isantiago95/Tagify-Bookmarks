@@ -2,16 +2,10 @@ import React from 'react';
 import tagManager from '../../../API/TagManagerApi';
 import useForm from '../../../hooks/useForm';
 import { FormPopupFormProps } from '../../../interfaces/BookmarkProps';
+import bookmarksApi from '../../../API/BookmarksApi';
 
-const searchMethod = async (query: string): Promise<string[]> => {
-  const delay = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
-
-  await delay(800);
-
-  const response = await tagManager.getTags(query);
-  return response;
-};
+const searchMethod = async (query: string): Promise<string[]> =>
+  await tagManager.getTags(query);
 
 const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
   const {
@@ -23,33 +17,41 @@ const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
     resetValue,
     searchResults,
     values,
+    updateInitialValues,
   } = useForm({
     initialValues: {
-      bookmarkName: currentTab.title ?? '',
+      title: currentTab.title ?? '',
       url: currentTab.url ?? '',
       searchTag: '',
       tags: [],
     },
     searchMethod,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log('BookmarkForm submitted:', values);
+      await bookmarksApi.create({
+        title: values.title as string,
+        url: values.url as string,
+        tags: values.tags as string[],
+      });
+      window.close();
     },
   });
 
-  // FIXME: when user hits tab, the search function still running, and should be aborted
+  React.useEffect(() => {
+    console.log(currentTab);
+    updateInitialValues(currentTab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTab]);
+
   const saveTagOnTabKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const searchTag = (values.searchTag as string).trim();
     if (e.key === 'Tab' && searchTag) {
       e.preventDefault();
       resetValue('searchTag');
-      resetResults();
       updateArray('tags', searchTag, 'add');
+      resetResults();
     }
   };
-
-  React.useEffect(() => {
-    console.log('searchResults:', searchResults);
-  }, [searchResults]);
 
   return (
     <div className="flex flex-col gap-3 py-2">
@@ -57,15 +59,15 @@ const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
 
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="flex gap-4 items-center">
-          <label htmlFor="bookmarkName" className="w-1/4">
+          <label htmlFor="title" className="w-1/4">
             Name
           </label>
           <input
-            name="bookmarkName"
+            name="title"
             type="text"
             placeholder="Bookmark Name"
             className="w-auto p-1 border border-gray-300 rounded text-slate-800 text-sm"
-            value={values.bookmarkName}
+            value={values.title}
             onChange={handleChange}
           />
         </div>
@@ -86,7 +88,7 @@ const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
               onKeyDown={saveTagOnTabKeyPress}
             />
             {loading && <p className="text-sm mt-2">Loading...</p>}
-            {searchResults.length > 0 && (
+            {values.searchTag && searchResults.length > 0 && (
               <div className="relative">
                 <div className="absolute w-full bg-white border text-slate-800 border-gray-300 rounded mt-2 z-10">
                   {searchResults.map((result, index) => (
@@ -107,7 +109,7 @@ const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
           </div>
         </div>
 
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap gap-2">
           {(values.tags as string[])?.map((tag, index) => (
             <div
               className="bg-blue-light pl-3 pr-1 py-1 blue-dark rounded-full text-sm flex gap-2"

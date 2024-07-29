@@ -47,6 +47,28 @@ class BookmarksApi {
       return;
     });
   }
+
+  public async create(bookmark: {
+    title: string;
+    url: string;
+    parentId?: string;
+    tags?: string[];
+  }): Promise<void> {
+    console.log(bookmark);
+    return new Promise((resolve) => {
+      chrome.bookmarks.create(
+        {
+          parentId: '1',
+          title: 'New Bookmark',
+          url: 'https://www.google.com',
+        },
+        (bookmark) => {
+          console.log('bookmark created:', bookmark);
+          resolve();
+        }
+      );
+    });
+  }
 }
 
 const bookmarksApi = BookmarksApi.getInstance();
