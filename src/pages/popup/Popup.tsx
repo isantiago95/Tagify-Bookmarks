@@ -1,41 +1,56 @@
 import React from 'react';
+import Form from './components/Form';
+import bookmarksApi from '../../API/BookmarksApi';
+import { FormPopupFormProps } from '../../interfaces/BookmarkProps';
 
 const Popup = (): JSX.Element => {
-  const [toggleOpen, setToggleOpen] = React.useState(false);
+  const [currentTab, setCurrentTab] = React.useState<
+    FormPopupFormProps['currentTab']
+  >({
+    title: '',
+    url: '',
+    favIconUrl: '',
+  });
 
-  const saveBookmarkPage = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tab = tabs[0];
-      chrome.bookmarks.create({
-        parentId: '1',
-        title: tab.title,
-        url: tab.url,
-      });
-    });
-    setToggleOpen(true);
+  const getInitialValues = async () => {
+    const tab = await bookmarksApi.getCurrentTab();
+    setCurrentTab(tab);
   };
 
-  const openBookmark = () => {
-    chrome.tabs.create({ url: 'chrome://bookmarks/' });
-    setToggleOpen(false);
-  };
+  React.useEffect(() => {
+    getInitialValues();
+  }, []);
+
+  // const [toggleOpen, setToggleOpen] = React.useState(false);
+
+  // const saveBookmarkPage = () => {
+  //   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  //     const tab = tabs[0];
+  //     chrome.bookmarks.create({
+  //       parentId: '1',
+  //       title: tab.title,
+  //       url: tab.url,
+  //     });
+  //   });
+  //   setToggleOpen(true);
+  // };
+
+  // const openBookmark = () => {
+  //   chrome.tabs.create({ url: 'chrome://bookmarks/' });
+  //   setToggleOpen(false);
+  // };
 
   return (
-    <div className="h-screen w-screen flex flex-col gap-2 items-center justify-center">
-      <button
-        className="px-3 py-2 bg-green-600 text-white rounded-md"
-        onClick={saveBookmarkPage}
-      >
-        Save Bookmark
-      </button>
-      {toggleOpen && (
-        <button
-          onClick={openBookmark}
-          className="px-3 py-2 bg-slate-600 text-white rounded-md"
-        >
-          Open bookmarks
-        </button>
-      )}
+    <div className="flex gap-5 items-start justify-center text-slate-100 py-4shadow-lg rounded-lg p-4">
+      <div className="rounded-xl bg-black p-4 mt-2 flex items-center justify-center">
+        <img
+          src={`${currentTab.favIconUrl}`}
+          alt="logo"
+          className="w-20 h-20 object-contain"
+        />
+      </div>
+
+      <Form currentTab={currentTab} />
     </div>
   );
 };

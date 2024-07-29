@@ -1,5 +1,5 @@
 import React from 'react';
-import bookmarksApi from '../API/Bookmarks';
+import bookmarksApi from '../API/BookmarksApi';
 
 const useBookmarks = () => {
   const [bookmarkTree, setBookmarkTree] = React.useState<

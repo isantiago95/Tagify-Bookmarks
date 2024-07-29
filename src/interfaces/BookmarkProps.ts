@@ -9,3 +9,11 @@ export interface BookmarkBookmarkItemsProps extends BookmarkLevelProps {
 export interface BookmarkItemProps extends BookmarkLevelProps {
   treeItem: chrome.bookmarks.BookmarkTreeNode;
 }
+
+export interface FormPopupFormProps {
+  currentTab: {
+    title?: string;
+    url?: string;
+    favIconUrl?: string;
+  };
+}

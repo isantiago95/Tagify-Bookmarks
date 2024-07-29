@@ -15,6 +15,19 @@ class BookmarksApi {
     return this.instance;
   }
 
+  public getCurrentTab(): Promise<{
+    title?: string;
+    url?: string;
+    favIconUrl?: string;
+  }> {
+    return new Promise((resolve) => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const { title, url, favIconUrl } = tabs[0];
+        resolve({ title, url, favIconUrl });
+      });
+    });
+  }
+
   public async getBookmarksTree(
     searchTerm?: string
   ): Promise<chrome.bookmarks.BookmarkTreeNode[]> {
