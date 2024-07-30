@@ -2,6 +2,7 @@ import React from 'react';
 import { BookmarkItemProps } from '../../../interfaces/BookmarkProps';
 import useBookmarks from '../../../hooks/useBookmarks';
 import BookmarkListItems from './BookmarkListItems';
+import { faviconUrl } from '../../../contants';
 
 const BookmarkItem: React.FC<BookmarkItemProps> = ({ treeItem, level = 0 }) => {
   const { fetchBookmarks, calculateIndent } = useBookmarks();
@@ -73,7 +74,7 @@ const BookmarkItem: React.FC<BookmarkItemProps> = ({ treeItem, level = 0 }) => {
         className="flex justify-start items-center gap-2"
       >
         <img
-          src={`https://www.google.com/s2/favicons?domain=${treeItem.url}`}
+          src={`${faviconUrl}${treeItem.url}`}
           alt={`favicon of ${treeItem.title}`}
           className="w-4 h-4"
         />

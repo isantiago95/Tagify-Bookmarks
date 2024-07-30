@@ -1,41 +1,45 @@
 import React from 'react';
+import BookmarkForm from './components/BookmarkForm';
+import bookmarksApi from '../../API/BookmarksApi';
+import {
+  CurrentTabProps,
+  ExtendedBookmarkTreeNode,
+} from '../../interfaces/BookmarkProps';
+import tagManager from '../../API/TagManagerApi';
 
 const Popup = (): JSX.Element => {
-  const [toggleOpen, setToggleOpen] = React.useState(false);
+  const [currentTab, setCurrentTab] = React.useState<
+    ExtendedBookmarkTreeNode | CurrentTabProps
+  >({});
 
-  const saveBookmarkPage = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tab = tabs[0];
-      chrome.bookmarks.create({
-        parentId: '1',
-        title: tab.title,
-        url: tab.url,
-      });
-    });
-    setToggleOpen(true);
+  const getInitialValues = async () => {
+    let tags: string[] = [];
+    const tab = await bookmarksApi.getCurrentTab();
+    const [bookmarkNode] = await bookmarksApi.getBookmarksTree(tab.url);
+    if (bookmarkNode) {
+      tags = await tagManager.getTagsByBookmarkId(bookmarkNode.id);
+      console.log(tags);
+    }
+    const bookmark = { ...tab, ...bookmarkNode, tags };
+    console.log(bookmark);
+    setCurrentTab(bookmark);
   };
 
-  const openBookmark = () => {
-    chrome.tabs.create({ url: 'chrome://bookmarks/' });
-    setToggleOpen(false);
-  };
+  React.useEffect(() => {
+    getInitialValues();
+  }, []);
 
   return (
-    <div className="h-screen w-screen flex flex-col gap-2 items-center justify-center">
-      <button
-        className="px-3 py-2 bg-green-600 text-white rounded-md"
-        onClick={saveBookmarkPage}
-      >
-        Save Bookmark
-      </button>
-      {toggleOpen && (
-        <button
-          onClick={openBookmark}
-          className="px-3 py-2 bg-slate-600 text-white rounded-md"
-        >
-          Open bookmarks
-        </button>
-      )}
+    <div className="flex gap-5 items-start justify-center text-slate-100 py-4shadow-lg rounded-lg p-4">
+      <div className="rounded-xl bg-black p-4 mt-2 flex items-center justify-center">
+        <img
+          src={`${currentTab.favIconUrl}`}
+          alt="logo"
+          className="w-20 h-20 object-contain"
+        />
+      </div>
+
+      {currentTab.url && <BookmarkForm currentTab={currentTab} />}
     </div>
   );
 };

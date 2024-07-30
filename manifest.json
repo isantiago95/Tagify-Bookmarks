@@ -3,6 +3,11 @@
     "name": "Bookmark Extension",
     "description": "This extension will help you to bookmark your favorite websites and filtering them by tags.",
     "version": "1.0.0",
+    "icons": {
+        "16": "src/assets/images/start.png",
+        "48": "src/assets/images/start.png",
+        "128": "src/assets/images/start.png"
+    },
     "action": {
         "default_popup": "src/pages/popup/popup.html"
     },
