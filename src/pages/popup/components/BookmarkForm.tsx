@@ -32,7 +32,7 @@ const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
 
       console.log(response);
 
-      window.close();
+      // window.close();
     },
   });
 
@@ -48,6 +48,11 @@ const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
       updateArray('tags', searchTag, 'add');
       resetResults();
     }
+  };
+
+  const handleRemoveBookmark = async () => {
+    await bookmarksApi.remove(currentTab.id);
+    window.close();
   };
 
   return (
@@ -126,6 +131,7 @@ const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
         <div className="flex gap-3 justify-end items-center">
           <button
             type="button"
+            onClick={handleRemoveBookmark}
             className="w-24 px-3 py-2 rounded-full bg-blue-dark blue-light text-base"
           >
             Remove

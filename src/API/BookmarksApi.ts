@@ -62,22 +62,32 @@ class BookmarksApi {
     return await this.create(bookmark);
   }
 
-  public async create({
-    parentId = '0',
-    title,
-    url,
-  }: BookmarkTreeNodeProps): Promise<BookmarkTreeNodeProps> {
+  public async create(
+    bookmark: BookmarkTreeNodeProps
+  ): Promise<BookmarkTreeNodeProps> {
+    const { parentId, title, url } = bookmark;
     return new Promise((resolve) => {
-      chrome.bookmarks.create({ parentId, title, url }, resolve);
+      chrome.bookmarks.create({ parentId, title, url }, (bookmark) =>
+        resolve(bookmark)
+      );
     });
   }
 
   public async update(
     id: string,
-    { title, url }: chrome.bookmarks.BookmarkChangesArg
+    bookmark: chrome.bookmarks.BookmarkChangesArg
   ): Promise<BookmarkTreeNodeProps> {
+    const { title, url } = bookmark;
     return new Promise((resolve) => {
-      chrome.bookmarks.update(id, { title, url }, resolve);
+      chrome.bookmarks.update(id, { title, url }, (bookmark) =>
+        resolve(bookmark)
+      );
+    });
+  }
+
+  public async remove(id: string): Promise<void> {
+    return new Promise((resolve) => {
+      chrome.bookmarks.remove(id, resolve);
     });
   }
 }
