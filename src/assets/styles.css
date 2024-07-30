@@ -7,6 +7,12 @@
   --custom-blue-light: rgb(168, 199, 250);
 }
 
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #1e1e1e;
+  width: 370px;
+}
+
 .bg-blue-dark {
   background-color: var(--custom-blue-dark);
 }
@@ -23,8 +29,17 @@
   color: var(--custom-blue-light);
 }
 
-body {
-  font-family: 'Nunito', sans-serif;
-  background-color: #1e1e1e;
-  width: 370px;
+/* Custom scrollbar styles */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: var(--custom-blue-light);
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
 }

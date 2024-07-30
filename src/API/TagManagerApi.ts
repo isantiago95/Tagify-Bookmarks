@@ -30,8 +30,17 @@ class TagManagerApi {
     });
   }
 
+  private deleteUnusedTags(): void {
+    Object.keys(this.tags).forEach((tagName) => {
+      if (this.tags[tagName].bookmarks.length === 0) {
+        delete this.tags[tagName];
+      }
+    });
+  }
+
   private async syncTags(): Promise<void> {
     return new Promise((resolve) => {
+      this.deleteUnusedTags();
       chrome.storage.sync.set({ tags: this.tags }, () => {
         resolve();
       });
@@ -98,6 +107,21 @@ class TagManagerApi {
   // Method to get bookmarks by tag
   public getBookmarksByTag(tagName: string): string[] | undefined {
     return this.tags[tagName]?.bookmarks;
+  }
+
+  public async removeBookmarkFromTags(bookmarkId: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      Object.keys(this.tags).forEach((tagName) => {
+        const index = this.tags[tagName].bookmarks.indexOf(bookmarkId);
+        if (index > -1) {
+          this.tags[tagName].bookmarks.splice(index, 1);
+        }
+      });
+
+      await this.syncTags();
+      console.log(this.tags);
+      resolve();
+    });
   }
 }
 

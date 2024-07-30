@@ -44,7 +44,7 @@ const useForm = ({
     setLoading(true);
     try {
       const results = await searchMethod(value);
-      setSearchResults([...results, value]);
+      setSearchResults([...new Set([...results, value])]);
     } catch (error) {
       console.error('Error during search:', error);
     } finally {
