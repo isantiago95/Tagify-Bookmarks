@@ -17,31 +17,28 @@ const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
     resetValue,
     searchResults,
     values,
-    updateInitialValues,
   } = useForm({
     initialValues: {
-      title: currentTab.title ?? '',
-      url: currentTab.url ?? '',
+      ...currentTab,
       searchTag: '',
       tags: [],
     },
     searchMethod,
     onSubmit: async (values) => {
       console.log('BookmarkForm submitted:', values);
-      await bookmarksApi.create({
-        title: values.title as string,
-        url: values.url as string,
-        tags: values.tags as string[],
-      });
+      const { tags, searchTag, ...rest } = values;
+
+      const response = await bookmarksApi.createOrUpdate(rest);
+
+      console.log(response);
+
       window.close();
     },
   });
 
   React.useEffect(() => {
-    console.log(currentTab);
-    updateInitialValues(currentTab);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTab]);
+    console.log('form Values: ', values);
+  }, [values]);
 
   const saveTagOnTabKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const searchTag = (values.searchTag as string).trim();
@@ -83,12 +80,12 @@ const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
               type="search"
               placeholder="Add tag"
               className="w-auto p-1 border border-gray-300 rounded text-slate-800 text-sm"
-              value={values.searchTag}
+              value={values.searchTag as string}
               onChange={handleChange}
               onKeyDown={saveTagOnTabKeyPress}
             />
             {loading && <p className="text-sm mt-2">Loading...</p>}
-            {values.searchTag && searchResults.length > 0 && (
+            {(values.searchTag as string) && searchResults.length > 0 && (
               <div className="relative">
                 <div className="absolute w-full bg-white border text-slate-800 border-gray-300 rounded mt-2 z-10">
                   {searchResults.map((result, index) => (

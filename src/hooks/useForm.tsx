@@ -1,8 +1,6 @@
 import React from 'react';
-
-interface FormValues {
-  [key: string]: string | string[];
-}
+import { ExtendedBookmarkTreeNode } from '../interfaces/BookmarkProps';
+interface FormValues extends ExtendedBookmarkTreeNode {}
 
 interface FormErrors {
   [key: string]: string;
@@ -39,13 +37,6 @@ const useForm = ({
         func(...args);
       }, delay);
     };
-  };
-
-  const updateInitialValues = (newInitialValues: FormValues) => {
-    setValues({ ...values, ...newInitialValues });
-    setErrors({});
-    setSearchResults([]);
-    setLoading(false);
   };
 
   const handleSearch = async (value: string) => {
@@ -122,7 +113,6 @@ const useForm = ({
     resetValue,
     searchResults,
     updateArray,
-    updateInitialValues,
     values,
   };
 };

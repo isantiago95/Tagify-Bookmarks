@@ -1,7 +1,12 @@
+import {
+  BookmarkTreeNodeProps,
+  ExtendedBookmarkTreeNode,
+} from '../interfaces/BookmarkProps';
+
 class BookmarksApi {
   private static instance: BookmarksApi | null = null;
-  private bookmarksTree: chrome.bookmarks.BookmarkTreeNode[];
-  private bookmarksResults: chrome.bookmarks.BookmarkTreeNode[];
+  private bookmarksTree: BookmarkTreeNodeProps[];
+  private bookmarksResults: BookmarkTreeNodeProps[];
 
   private constructor() {
     this.bookmarksTree = [];
@@ -30,7 +35,7 @@ class BookmarksApi {
 
   public async getBookmarksTree(
     searchTerm?: string
-  ): Promise<chrome.bookmarks.BookmarkTreeNode[]> {
+  ): Promise<BookmarkTreeNodeProps[]> {
     return new Promise((resolve) => {
       if (!searchTerm) {
         chrome.bookmarks.getTree((bookmarks) => {
@@ -48,25 +53,31 @@ class BookmarksApi {
     });
   }
 
-  public async create(bookmark: {
-    title: string;
-    url: string;
-    parentId?: string;
-    tags?: string[];
-  }): Promise<void> {
-    console.log(bookmark);
+  public async createOrUpdate(
+    bookmark: ExtendedBookmarkTreeNode
+  ): Promise<BookmarkTreeNodeProps> {
+    const { id, ...rest } = bookmark;
+    if (id) return await this.update(id, rest);
+
+    return await this.create(bookmark);
+  }
+
+  public async create({
+    parentId = '0',
+    title,
+    url,
+  }: BookmarkTreeNodeProps): Promise<BookmarkTreeNodeProps> {
     return new Promise((resolve) => {
-      chrome.bookmarks.create(
-        {
-          parentId: '1',
-          title: 'New Bookmark',
-          url: 'https://www.google.com',
-        },
-        (bookmark) => {
-          console.log('bookmark created:', bookmark);
-          resolve();
-        }
-      );
+      chrome.bookmarks.create({ parentId, title, url }, resolve);
+    });
+  }
+
+  public async update(
+    id: string,
+    { title, url }: chrome.bookmarks.BookmarkChangesArg
+  ): Promise<BookmarkTreeNodeProps> {
+    return new Promise((resolve) => {
+      chrome.bookmarks.update(id, { title, url }, resolve);
     });
   }
 }

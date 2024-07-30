@@ -1,44 +1,26 @@
 import React from 'react';
 import BookmarkForm from './components/BookmarkForm';
 import bookmarksApi from '../../API/BookmarksApi';
-import { FormPopupFormProps } from '../../interfaces/BookmarkProps';
+import {
+  CurrentTabProps,
+  ExtendedBookmarkTreeNode,
+} from '../../interfaces/BookmarkProps';
 
 const Popup = (): JSX.Element => {
   const [currentTab, setCurrentTab] = React.useState<
-    FormPopupFormProps['currentTab']
-  >({
-    title: '',
-    url: '',
-    favIconUrl: '',
-  });
+    ExtendedBookmarkTreeNode | CurrentTabProps
+  >({});
 
   const getInitialValues = async () => {
     const tab = await bookmarksApi.getCurrentTab();
-    setCurrentTab(tab);
+    const [bookmarkNode] = await bookmarksApi.getBookmarksTree(tab.url);
+    const bookmark = { ...tab, ...bookmarkNode };
+    setCurrentTab(bookmark);
   };
 
   React.useEffect(() => {
     getInitialValues();
   }, []);
-
-  // const [toggleOpen, setToggleOpen] = React.useState(false);
-
-  // const saveBookmarkPage = () => {
-  //   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-  //     const tab = tabs[0];
-  //     chrome.bookmarks.create({
-  //       parentId: '1',
-  //       title: tab.title,
-  //       url: tab.url,
-  //     });
-  //   });
-  //   setToggleOpen(true);
-  // };
-
-  // const openBookmark = () => {
-  //   chrome.tabs.create({ url: 'chrome://bookmarks/' });
-  //   setToggleOpen(false);
-  // };
 
   return (
     <div className="flex gap-5 items-start justify-center text-slate-100 py-4shadow-lg rounded-lg p-4">
@@ -50,7 +32,7 @@ const Popup = (): JSX.Element => {
         />
       </div>
 
-      <BookmarkForm currentTab={currentTab} />
+      {currentTab.url && <BookmarkForm currentTab={currentTab} />}
     </div>
   );
 };
