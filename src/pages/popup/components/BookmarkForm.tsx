@@ -1,13 +1,22 @@
 import React from 'react';
 import tagManager from '../../../API/TagManagerApi';
 import useForm from '../../../hooks/useForm';
-import { FormPopupFormProps } from '../../../interfaces/BookmarkProps';
 import bookmarksApi from '../../../API/BookmarksApi';
+import {
+  CurrentTabProps,
+  ExtendedBookmarkTreeNode,
+} from '../../../interfaces/BookmarkProps';
+
+interface BookmarkFormProps {
+  currentTab: CurrentTabProps;
+}
 
 const searchMethod = async (query: string): Promise<string[]> =>
   await tagManager.getTags(query);
 
-const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
+const BookmarkForm = ({
+  currentTab,
+}: BookmarkFormProps | ExtendedBookmarkTreeNode) => {
   const {
     updateArray,
     handleChange,
@@ -19,26 +28,20 @@ const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
     values,
   } = useForm({
     initialValues: {
-      ...currentTab,
+      ...(currentTab as ExtendedBookmarkTreeNode),
       searchTag: '',
-      tags: [],
     },
     searchMethod,
     onSubmit: async (values) => {
-      console.log('BookmarkForm submitted:', values);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { tags, searchTag, ...rest } = values;
 
       const response = await bookmarksApi.createOrUpdate(rest);
+      await tagManager.syncBookmarkToTags(tags as string[], response.id);
 
-      console.log(response);
-
-      // window.close();
+      window.close();
     },
   });
-
-  React.useEffect(() => {
-    console.log('form Values: ', values);
-  }, [values]);
 
   const saveTagOnTabKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const searchTag = (values.searchTag as string).trim();
@@ -51,9 +54,15 @@ const BookmarkForm = ({ currentTab }: FormPopupFormProps) => {
   };
 
   const handleRemoveBookmark = async () => {
-    await bookmarksApi.remove(currentTab.id);
+    await bookmarksApi.remove(
+      (currentTab as ExtendedBookmarkTreeNode).id as string
+    );
     window.close();
   };
+
+  React.useEffect(() => {
+    console.log('form values: ', values);
+  }, []);
 
   return (
     <div className="flex flex-col gap-3 py-2">

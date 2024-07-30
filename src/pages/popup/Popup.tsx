@@ -5,6 +5,7 @@ import {
   CurrentTabProps,
   ExtendedBookmarkTreeNode,
 } from '../../interfaces/BookmarkProps';
+import tagManager from '../../API/TagManagerApi';
 
 const Popup = (): JSX.Element => {
   const [currentTab, setCurrentTab] = React.useState<
@@ -12,9 +13,15 @@ const Popup = (): JSX.Element => {
   >({});
 
   const getInitialValues = async () => {
+    let tags: string[] = [];
     const tab = await bookmarksApi.getCurrentTab();
     const [bookmarkNode] = await bookmarksApi.getBookmarksTree(tab.url);
-    const bookmark = { ...tab, ...bookmarkNode };
+    if (bookmarkNode) {
+      tags = await tagManager.getTagsByBookmarkId(bookmarkNode.id);
+      console.log(tags);
+    }
+    const bookmark = { ...tab, ...bookmarkNode, tags };
+    console.log(bookmark);
     setCurrentTab(bookmark);
   };
 
