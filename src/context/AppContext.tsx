@@ -32,7 +32,10 @@ const reducer = (state: AppState, action: Action): AppState => {
 };
 
 // Define the initial state of the application
-const initialState: AppState = { bookmarkTree: [] };
+const initialState: AppState = {
+  bookmarkTree: [],
+  selectedTree: undefined,
+};
 
 // Define a no-op dispatch function
 const noopDispatch: React.Dispatch<Action> = () => {};
@@ -49,17 +52,12 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   // Use the custom hook to get the bookmark tree
-  const {
-    bookmarkTree,
-    // bookmarksResults,
-    // fetchBookmarks,
-    // searchBookmark,
-    // calculateIndent,
-  } = useBookmarks();
+  const { bookmarkTree } = useBookmarks();
 
   // Dispatch the action to update the bookmarkTree whenever it changes
   React.useEffect(() => {
     dispatch({ type: 'SET_BOOKMARK_TREE', payload: bookmarkTree });
+    dispatch({ type: 'SET_SELECTED_TREE', payload: bookmarkTree[0] });
   }, [bookmarkTree]);
 
   // Provide the state and dispatch function as an array

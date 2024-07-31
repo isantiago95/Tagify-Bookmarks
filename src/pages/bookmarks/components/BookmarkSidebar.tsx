@@ -13,7 +13,7 @@ const BookmarkSidebar = () => {
         <h1 className="text-2xl font-semibold">Bookmarks</h1>
       </div>
 
-      <BookmarkListItems bookmarkTree={state.bookmarkTree} />
+      <BookmarkListItems bookmarkTree={state.bookmarkTree} onlyFolders />
     </div>
   );
 };

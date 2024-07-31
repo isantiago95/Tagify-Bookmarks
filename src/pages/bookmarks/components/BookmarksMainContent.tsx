@@ -19,7 +19,9 @@ const BookmarksMainContent = () => {
       />
 
       <div>
-        {/* <BookmarkListItems bookmarkTree={state.bookmarksResults} /> */}
+        {state.selectedTree && (
+          <BookmarkListItems bookmarkTree={state.selectedTree.children ?? []} />
+        )}
       </div>
     </div>
   );
