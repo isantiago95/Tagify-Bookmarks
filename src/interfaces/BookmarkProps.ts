@@ -1,6 +1,12 @@
+export interface ContextMenuOptions {
+  name: string;
+  onClick?: (bookmark: BookmarkTreeNodeProps) => void;
+}
+
 interface BookmarkLevelProps {
   level?: number;
   onlyFolders?: boolean;
+  contextMenuOptions?: ContextMenuOptions[];
 }
 
 export interface BookmarkBookmarkItemsProps extends BookmarkLevelProps {

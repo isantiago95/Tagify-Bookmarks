@@ -6,9 +6,8 @@ const BookmarkListItems: React.FC<BookmarkBookmarkItemsProps> = ({
   bookmarkTree,
   level = 0,
   onlyFolders = false,
+  contextMenuOptions,
 }) => {
-  // const classes = onlyFolders ? '' : 'w-80';
-
   return (
     <ul
       className={`${onlyFolders ? '' : 'w-4/5 shadow-2xl border border-slate-800 rounded-lg'}`}
@@ -19,6 +18,7 @@ const BookmarkListItems: React.FC<BookmarkBookmarkItemsProps> = ({
           treeItem={treeItem}
           level={level}
           onlyFolders={onlyFolders}
+          contextMenuOptions={contextMenuOptions}
         />
       ))}
     </ul>
