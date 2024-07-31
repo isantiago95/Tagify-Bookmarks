@@ -2,24 +2,30 @@ import React from 'react';
 import { BookmarkItemProps } from '../../../interfaces/BookmarkProps';
 import useBookmarks from '../../../hooks/useBookmarks';
 import BookmarkListItems from './BookmarkListItems';
-import { faviconUrl } from '../../../contants';
+import { faviconUrl } from '../../../constants';
+import folderIcon from '../../../assets/images/carpeta.png';
+import { useContext } from 'react';
+import { AppContext } from '../../../context/AppContext';
 
-const BookmarkItem: React.FC<BookmarkItemProps> = ({ treeItem, level = 0 }) => {
+const BookmarkFolderIcon = () => (
+  <img src={folderIcon} alt="folder icon" className="w-4 h-4 invert" />
+);
+
+const BookmarkItem: React.FC<BookmarkItemProps> = ({
+  treeItem,
+  level = 0,
+  onlyFolders,
+}) => {
+  const { dispatch } = useContext(AppContext);
+
   const { fetchBookmarks, calculateIndent } = useBookmarks();
 
-  const handleFolderClick = (
-    e: React.MouseEvent<HTMLSpanElement, MouseEvent>
-  ) => {
+  const handleFolderClick = () => {
+    dispatch({ type: 'SET_SELECTED_TREE', payload: treeItem });
     const childUl = document.getElementById(treeItem.id);
-    const targetElement = e.target as HTMLElement;
     if (childUl) {
       childUl.classList.toggle('hidden');
       childUl.classList.toggle('flex');
-      if (childUl.classList.contains('flex')) {
-        targetElement.innerHTML = `📂 ${treeItem.title}`;
-      } else {
-        targetElement.innerHTML = `📁 ${treeItem.title}`;
-      }
     }
   };
 
@@ -41,10 +47,11 @@ const BookmarkItem: React.FC<BookmarkItemProps> = ({ treeItem, level = 0 }) => {
       <li key={treeItem.id} className="list-none">
         <span
           onClick={handleFolderClick}
-          className="flex py-2 pr-2 cursor-pointer font-semibold border-b text-base hover:font-bold"
+          className="flex gap-2 items-center py-2 pr-2 cursor-pointer font-semibold text-base hover:font-bold"
           style={{ paddingLeft: `${calculateIndent(level)}px` }}
         >
-          📁 {treeItem.title}
+          <BookmarkFolderIcon />
+          {treeItem.title}
         </span>
 
         <ul id={treeItem.id} className="hidden flex-col">
@@ -55,7 +62,7 @@ const BookmarkItem: React.FC<BookmarkItemProps> = ({ treeItem, level = 0 }) => {
 
           <div
             style={{ paddingLeft: `${calculateIndent(level)}px` }}
-            className="flex py-2 pr-2 cursor-pointer font-semibold border-b text-base hover:font-bold"
+            className="flex py-2 pr-2 cursor-pointer font-semibold text-base hover:font-bold"
             onClick={handleNewFolderClick}
           >
             + New Folder
@@ -65,23 +72,24 @@ const BookmarkItem: React.FC<BookmarkItemProps> = ({ treeItem, level = 0 }) => {
     );
   }
 
-  return (
-    <li key={treeItem.id} className="text-slate-100 text-base list-none">
-      <a
-        style={{ paddingLeft: `${calculateIndent(level)}px` }}
-        href={treeItem.url}
-        target="_blank"
-        className="flex justify-start items-center gap-2"
-      >
-        <img
-          src={`${faviconUrl}${treeItem.url}`}
-          alt={`favicon of ${treeItem.title}`}
-          className="w-4 h-4"
-        />
-        {treeItem.title}
-      </a>
-    </li>
-  );
+  if (onlyFolders && !treeItem.children)
+    return (
+      <li key={treeItem.id} className="text-slate-100 text-base list-none">
+        <a
+          style={{ paddingLeft: `${calculateIndent(level)}px` }}
+          href={treeItem.url}
+          target="_blank"
+          className="flex justify-start items-center gap-2"
+        >
+          <img
+            src={`${faviconUrl}${treeItem.url}`}
+            alt={`favicon of ${treeItem.title}`}
+            className="w-4 h-4"
+          />
+          {treeItem.title}
+        </a>
+      </li>
+    );
 };
 
 export default BookmarkItem;

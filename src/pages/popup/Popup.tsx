@@ -21,7 +21,7 @@ const Popup = (): JSX.Element => {
       console.log(tags);
     }
     const bookmark = { ...tab, ...bookmarkNode, tags };
-    console.log(bookmark);
+
     setCurrentTab(bookmark);
   };
 

@@ -3,7 +3,7 @@ import BookmarksMainContent from './components/BookmarksMainContent';
 
 const Bookmarks = () => {
   return (
-    <div className="w-screen h-screen flex flex-row text-slate-100 bg-slate-900">
+    <div className="w-screen h-screen flex flex-row text-slate-100 bg-slate-900 overflow-auto">
       {/* Sidebar */}
       <div className="w-1/3 min-h-screen bg-slate-800 p-5">
         <BookmarkSidebar />
