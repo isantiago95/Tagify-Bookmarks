@@ -4,7 +4,9 @@ import BookmarkListItems from './BookmarkListItems';
 import { faviconUrl } from '../../../constants';
 import folderIcon from '../../../assets/images/carpeta.png';
 import arrowIcon from '../../../assets/images/right-arrow.png';
+import menuIcon from '../../../assets/images/menu.png';
 import { AppContext } from '../../../context/AppContext';
+import useContextMenu from '../../../hooks/useContextMenu';
 
 const calculateIndent = (level: number): number => {
   return level * 15;
@@ -16,6 +18,7 @@ const BookmarkItem: React.FC<BookmarkItemProps> = ({
   onlyFolders,
 }) => {
   const { state, dispatch } = useContext(AppContext);
+  const { handleContextMenuClick, ContextMenu, contextMenu } = useContextMenu();
 
   const handleFolderClick = () => {
     dispatch({ type: 'SET_SELECTED_TREE', payload: treeItem });
@@ -98,20 +101,27 @@ const BookmarkItem: React.FC<BookmarkItemProps> = ({
     // Render bookmarks if onlyFolders is false
     if (!onlyFolders) {
       return (
-        <li key={treeItem.id} className="text-slate-100 text-base list-none">
-          <a
-            style={{ paddingLeft: `${calculateIndent(level)}px` }}
-            href={treeItem.url}
-            target="_blank"
-            className="flex justify-start items-center gap-2"
-          >
+        <li
+          key={treeItem.id}
+          className="flex justify-between items-center text-slate-100 text-base list-none px-4 py-3 border-y border-slate-800"
+        >
+          <div className="flex gap-3 items-center">
             <img
               src={`${faviconUrl}${treeItem.url}`}
               alt={`favicon of ${treeItem.title}`}
               className="w-4 h-4"
             />
             {treeItem.title}
-          </a>
+          </div>
+          <div>
+            <img
+              src={menuIcon}
+              alt="menu"
+              className="w-5 h-5 cursor-pointer"
+              onClick={handleContextMenuClick}
+            />
+            {contextMenu?.visible && <ContextMenu />}
+          </div>
         </li>
       );
     }

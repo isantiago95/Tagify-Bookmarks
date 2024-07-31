@@ -18,7 +18,7 @@ const BookmarksMainContent = () => {
         className="w-full text-slate-100 p-3 bg-slate-950 rounded-full text-base mb-4"
       />
 
-      <div>
+      <div className="flex justify-center">
         {state.selectedTree && (
           <BookmarkListItems bookmarkTree={state.selectedTree.children ?? []} />
         )}
