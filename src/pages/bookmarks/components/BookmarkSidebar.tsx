@@ -1,18 +1,19 @@
 import BookmarkListItems from './BookmarkListItems';
 import chromeLogo from '../../../assets/images/chrome-dark.png';
-import useBookmarks from '../../../hooks/useBookmarks';
+import { useContext } from 'react';
+import { AppContext } from '../../../context/AppContext';
 
 const BookmarkSidebar = () => {
-  const { bookmarkTree } = useBookmarks();
+  const { state } = useContext(AppContext);
 
   return (
     <div>
-      <div className="flex gap-4 justify-start items-center mb-10">
-        <img src={chromeLogo} alt="chrome logo" className="w-10 invert" />
-        <h1 className="text-2xl font-semibold">Bookmarks</h1>
+      <div className="flex gap-4 justify-start items-center mb-10 pl-5">
+        <img src={chromeLogo} alt="chrome logo" className="w-8 invert" />
+        <h1 className="text-2xl font-medium">Bookmarks</h1>
       </div>
 
-      <BookmarkListItems bookmarkTree={bookmarkTree} />
+      <BookmarkListItems bookmarkTree={state.bookmarkTree} onlyFolders />
     </div>
   );
 };

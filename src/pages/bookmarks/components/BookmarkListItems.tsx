@@ -5,13 +5,19 @@ import BookmarkItem from './BookmarkItem';
 const BookmarkListItems: React.FC<BookmarkBookmarkItemsProps> = ({
   bookmarkTree,
   level = 0,
+  onlyFolders = false,
 }) => {
   return (
-    <>
+    <ul>
       {bookmarkTree?.map((treeItem) => (
-        <BookmarkItem key={treeItem.id} treeItem={treeItem} level={level} />
+        <BookmarkItem
+          key={treeItem.id}
+          treeItem={treeItem}
+          level={level}
+          onlyFolders={onlyFolders}
+        />
       ))}
-    </>
+    </ul>
   );
 };
 

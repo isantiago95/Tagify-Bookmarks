@@ -1,5 +1,6 @@
 interface BookmarkLevelProps {
   level?: number;
+  onlyFolders?: boolean;
 }
 
 export interface BookmarkBookmarkItemsProps extends BookmarkLevelProps {

@@ -26,16 +26,11 @@ const useBookmarks = () => {
     setBookmarksResults(results);
   };
 
-  const calculateIndent = (level: number) => {
-    return level * 15;
-  };
-
   return {
     bookmarkTree,
     bookmarksResults,
     fetchBookmarks,
     searchBookmark,
-    calculateIndent,
   };
 };
 
