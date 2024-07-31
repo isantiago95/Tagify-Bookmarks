@@ -8,7 +8,7 @@ const BookmarkListItems: React.FC<BookmarkBookmarkItemsProps> = ({
   onlyFolders = false,
 }) => {
   return (
-    <>
+    <ul>
       {bookmarkTree?.map((treeItem) => (
         <BookmarkItem
           key={treeItem.id}
@@ -17,7 +17,7 @@ const BookmarkListItems: React.FC<BookmarkBookmarkItemsProps> = ({
           onlyFolders={onlyFolders}
         />
       ))}
-    </>
+    </ul>
   );
 };
 

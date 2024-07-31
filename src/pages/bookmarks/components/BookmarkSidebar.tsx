@@ -8,9 +8,9 @@ const BookmarkSidebar = () => {
 
   return (
     <div>
-      <div className="flex gap-4 justify-start items-center mb-10">
+      <div className="flex gap-4 justify-start items-center mb-10 pl-5">
         <img src={chromeLogo} alt="chrome logo" className="w-8 invert" />
-        <h1 className="text-2xl font-semibold">Bookmarks</h1>
+        <h1 className="text-2xl font-medium">Bookmarks</h1>
       </div>
 
       <BookmarkListItems bookmarkTree={state.bookmarkTree} onlyFolders />
