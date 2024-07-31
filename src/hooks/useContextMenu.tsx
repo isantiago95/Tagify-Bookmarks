@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import ContextMenu from '../pages/bookmarks/components/ContextMenu';
+import ContextMenu, {
+  ContextMenuProps,
+} from '../pages/bookmarks/components/ContextMenu';
 
 export interface ContextMenuState {
   visible: boolean;
@@ -72,8 +74,12 @@ const useContextMenu = () => {
     contextMenu,
     contextMenuRef,
     handleContextMenuClick,
-    ContextMenu: () => (
-      <ContextMenu contextMenu={contextMenu} contextMenuRef={contextMenuRef} />
+    ContextMenu: ({ bookmark }: ContextMenuProps) => (
+      <ContextMenu
+        bookmark={bookmark}
+        contextMenu={contextMenu}
+        contextMenuRef={contextMenuRef}
+      />
     ),
   };
 };

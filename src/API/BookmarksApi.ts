@@ -90,6 +90,18 @@ class BookmarksApi {
       chrome.bookmarks.remove(id, resolve);
     });
   }
+
+  public openInNewTab(url: string): void {
+    chrome.tabs.create({ url });
+  }
+
+  public openInNewWindow(url: string): void {
+    chrome.windows.create({ url });
+  }
+
+  public openInIncognito(url: string): void {
+    chrome.windows.create({ url, incognito: true });
+  }
 }
 
 const bookmarksApi = BookmarksApi.getInstance();

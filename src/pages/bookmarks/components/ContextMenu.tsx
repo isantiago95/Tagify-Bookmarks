@@ -1,35 +1,76 @@
+import React from 'react';
+import bookmarksApi from '../../../API/BookmarksApi';
 import {
   ContextMenuRef,
   ContextMenuState,
 } from '../../../hooks/useContextMenu';
+import { BookmarkTreeNodeProps } from '../../../interfaces/BookmarkProps';
 
-interface ContextMenuProps {
+export interface ContextMenuProps {
   contextMenu: ContextMenuState;
   contextMenuRef: ContextMenuRef;
+  bookmark: BookmarkTreeNodeProps;
 }
 
 const options = [
-  { name: 'Edit', onClick: () => console.log('Option Edit clicked') },
-  { name: 'Delete', onClick: () => console.log('Option Delete clicked') },
+  {
+    name: 'Edit',
+    onClick: (bookmark: BookmarkTreeNodeProps) => {
+      console.log('Option Edit clicked: ', bookmark);
+    },
+  },
+  {
+    name: 'Delete',
+    onClick: (bookmark: BookmarkTreeNodeProps) => {
+      console.log('Option Delete clicked: ', bookmark);
+    },
+  },
   { name: 'separator' },
-  { name: 'Cut', onClick: () => console.log('Option Cut clicked') },
-  { name: 'Copy', onClick: () => console.log('Option Copy clicked') },
+  {
+    name: 'Cut',
+    onClick: (bookmark: BookmarkTreeNodeProps) => {
+      console.log('Option Cut clicked: ', bookmark);
+    },
+  },
+  {
+    name: 'Copy',
+    onClick: (bookmark: BookmarkTreeNodeProps) => {
+      console.log('Option Copy clicked: ', bookmark);
+    },
+  },
   { name: 'separator' },
   {
     name: 'Open in new tab',
-    onClick: () => console.log('Option Open in new tab clicked'),
+    onClick: (bookmark: BookmarkTreeNodeProps) => {
+      console.log('Option Open in new tab clicked: ', bookmark);
+      bookmarksApi.openInNewTab(bookmark?.url ?? '');
+    },
   },
   {
     name: 'Open in new window',
-    onClick: () => console.log('Option Open in new window clicked'),
+    onClick: (bookmark: BookmarkTreeNodeProps) => {
+      console.log('Option Open in new tab clicked: ', bookmark);
+      bookmarksApi.openInNewWindow(bookmark?.url ?? '');
+    },
   },
   {
     name: 'Open in incognito window',
-    onClick: () => console.log('Option Open in incognito window clicked'),
+    onClick: (bookmark: BookmarkTreeNodeProps) => {
+      console.log('Option Open in new tab clicked: ', bookmark);
+      bookmarksApi.openInIncognito(bookmark?.url ?? '');
+    },
   },
 ];
 
-const ContextMenu = ({ contextMenu, contextMenuRef }: ContextMenuProps) => {
+const ContextMenu = ({
+  contextMenu,
+  contextMenuRef,
+  bookmark,
+}: ContextMenuProps) => {
+  React.useEffect(() => {
+    console.log(bookmark);
+  }, []);
+
   return (
     <div
       ref={contextMenuRef}
@@ -46,11 +87,12 @@ const ContextMenu = ({ contextMenu, contextMenuRef }: ContextMenuProps) => {
               />
             );
           }
+
           return (
             <li
               key={option.name}
               className="text-slate-100 py-2 px-6 cursor-pointer hover:bg-slate-700"
-              onClick={option.onClick}
+              onClick={() => option.onClick && option.onClick(bookmark)}
             >
               {option.name}
             </li>

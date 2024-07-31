@@ -1,5 +1,8 @@
 import React, { useContext } from 'react';
-import { BookmarkItemProps } from '../../../interfaces/BookmarkProps';
+import {
+  BookmarkItemProps,
+  ExtendedBookmarkTreeNode,
+} from '../../../interfaces/BookmarkProps';
 import BookmarkListItems from './BookmarkListItems';
 import { faviconUrl } from '../../../constants';
 import folderIcon from '../../../assets/images/carpeta.png';
@@ -120,7 +123,7 @@ const BookmarkItem: React.FC<BookmarkItemProps> = ({
               className="w-5 h-5 cursor-pointer"
               onClick={handleContextMenuClick}
             />
-            {contextMenu?.visible && <ContextMenu />}
+            {contextMenu?.visible && <ContextMenu bookmark={treeItem} />}
           </div>
         </li>
       );
