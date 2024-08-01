@@ -10,7 +10,10 @@ export interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
   const { dispatch } = useContext(AppContext);
 
-  const handleClose = () => dispatch({ type: 'TOGGLE_MODAL', payload: false });
+  const handleClose = () => {
+    dispatch({ type: 'TOGGLE_MODAL', payload: false });
+    dispatch({ type: 'SET_SELECTED_NODE', payload: undefined });
+  };
 
   if (!isOpen) return null;
 

@@ -24,7 +24,7 @@ export type Action =
   | { type: 'SET_SELECTED_TREE'; payload: BookmarkTreeNodeProps }
   | { type: 'SET_BOOKMARK_TREE'; payload: AppState['bookmarkTree'] }
   | { type: 'TOGGLE_MODAL'; payload: boolean }
-  | { type: 'SET_SELECTED_NODE'; payload: BookmarkTreeNodeProps };
+  | { type: 'SET_SELECTED_NODE'; payload?: BookmarkTreeNodeProps };
 
 // Define the reducer function to handle state changes
 const reducer = (state: AppState, action: Action): AppState => {
