@@ -1,18 +1,20 @@
 import BookmarkListItems from './BookmarkListItems';
-import { useContext } from 'react';
-import { AppContext } from '../../../context/AppContext';
+import { useContext, useEffect } from 'react';
+import { Action, AppContext } from '../../../context/AppContext';
 import bookmarksApi from '../../../API/BookmarksApi';
 import {
   BookmarkTreeNodeProps,
   ContextMenuOptions,
 } from '../../../interfaces/BookmarkProps';
 
-const options: ContextMenuOptions[] = [
+const options = (dispatch: React.Dispatch<Action>): ContextMenuOptions[] => [
   {
     name: 'Edit',
     type: 'item',
     onClick: (bookmark: BookmarkTreeNodeProps) => {
       console.log('Option Edit clicked: ', bookmark);
+      dispatch({ type: 'SET_SELECTED_NODE', payload: bookmark });
+      dispatch({ type: 'TOGGLE_MODAL', payload: true });
     },
   },
   {
@@ -59,7 +61,11 @@ const options: ContextMenuOptions[] = [
 ];
 
 const BookmarksMainContent = () => {
-  const { state } = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
+
+  useEffect(() => {
+    console.log(state);
+  }, []);
 
   return (
     <div className="flex flex-col gap-3">
@@ -74,7 +80,7 @@ const BookmarksMainContent = () => {
         {state.selectedTree && (
           <BookmarkListItems
             bookmarkTree={state.selectedTree.children ?? []}
-            contextMenuOptions={options}
+            contextMenuOptions={options(dispatch)}
           />
         )}
       </div>

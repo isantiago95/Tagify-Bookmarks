@@ -87,8 +87,8 @@ const BookmarkForm = ({
     <div className="flex flex-col gap-3 py-2">
       <h3 className="text-lg font-semibold">Edit Bookmark</h3>
 
-      <form className="space-y-4 w-min" onSubmit={handleSubmit}>
-        <div className="flex gap-4 items-center">
+      <form className="space-y-4 min-w-max" onSubmit={handleSubmit}>
+        <div className="flex justify-between gap-4 items-center">
           <label htmlFor="title" className="w-1/4">
             Name
           </label>
@@ -102,7 +102,7 @@ const BookmarkForm = ({
           />
         </div>
 
-        <div className="flex gap-4 items-center">
+        <div className="flex justify-between gap-4 items-center">
           <label htmlFor="searchTag" className="w-1/4">
             Tags
           </label>
@@ -141,7 +141,7 @@ const BookmarkForm = ({
           </div>
         </div>
 
-        <div className="flex flex-wrap-reverse gap-2 max-h-24 overflow-y-scroll scrollbar-thin">
+        <div className="flex justify-between flex-wrap-reverse gap-2 max-h-24 overflow-y-scroll scrollbar-thin">
           {(values.tags as string[])?.map((tag, index) => (
             <div
               className="bg-blue-light pl-3 pr-1 py-1 blue-dark rounded-full text-sm flex gap-2"
@@ -158,7 +158,7 @@ const BookmarkForm = ({
           ))}
         </div>
 
-        <div className="flex gap-3 justify-end items-center">
+        <div className="flex justify-end gap-3 items-center">
           <button
             type="button"
             onClick={handleRemoveBookmark}
