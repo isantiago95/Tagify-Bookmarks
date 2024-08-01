@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import ContextMenu, {
-  ContextMenuProps,
-} from '../pages/bookmarks/components/ContextMenu';
+import ContextMenu from '../pages/bookmarks/components/ContextMenu';
+import {
+  BookmarkTreeNodeProps,
+  ContextMenuOptions,
+} from '../interfaces/BookmarkProps';
 
 export interface ContextMenuState {
   visible: boolean;
@@ -13,7 +15,12 @@ export interface ContextMenuRef {
   current: HTMLDivElement | null;
 }
 
-const useContextMenu = () => {
+export interface UseContextProps {
+  options: ContextMenuOptions[];
+  bookmark: BookmarkTreeNodeProps;
+}
+
+const useContextMenu = ({ options, bookmark }: UseContextProps) => {
   const [contextMenu, setContextMenu] = useState<ContextMenuState>({
     visible: false,
     x: 0,
@@ -55,8 +62,12 @@ const useContextMenu = () => {
       contextMenuRef.current &&
       !contextMenuRef.current.contains(event.target as Node)
     ) {
-      setContextMenu({ visible: false, x: 0, y: 0 });
+      closeContextMenu();
     }
+  };
+
+  const closeContextMenu = () => {
+    setContextMenu({ visible: false, x: 0, y: 0 });
   };
 
   useEffect(() => {
@@ -75,7 +86,15 @@ const useContextMenu = () => {
     contextMenu,
     contextMenuRef,
     handleContextMenuClick,
-    ContextMenu: (props: ContextMenuProps) => <ContextMenu {...props} />,
+    ContextMenu: () => (
+      <ContextMenu
+        bookmark={bookmark}
+        onClick={closeContextMenu}
+        contextMenu={contextMenu}
+        contextMenuRef={contextMenuRef}
+        options={options}
+      />
+    ),
   };
 };
 

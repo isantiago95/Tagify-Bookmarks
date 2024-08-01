@@ -13,6 +13,7 @@ export interface ContextMenuProps {
   contextMenuRef: ContextMenuRef;
   bookmark: BookmarkTreeNodeProps;
   options: ContextMenuOptions[];
+  onClick: () => void;
 }
 
 const ContextMenu = ({
@@ -20,15 +21,23 @@ const ContextMenu = ({
   contextMenuRef,
   bookmark,
   options,
+  onClick,
 }: ContextMenuProps) => {
   React.useEffect(() => {
     console.log(options);
-  }, []);
+  }, [options]);
+
+  const handleClick = (
+    callback?: (bookmark: BookmarkTreeNodeProps) => void
+  ) => {
+    callback?.(bookmark);
+    onClick();
+  };
 
   return (
     <div
       ref={contextMenuRef}
-      className="absolute bg-slate-800 shadow-md rounded-md "
+      className="absolute bg-slate-800 shadow-md rounded-md"
       style={{ top: contextMenu.y, left: contextMenu.x }}
     >
       <ul>
@@ -46,7 +55,7 @@ const ContextMenu = ({
             <li
               key={option.name}
               className="text-slate-100 py-2 px-6 cursor-pointer hover:bg-slate-700"
-              onClick={() => option.onClick?.(bookmark)}
+              onClick={() => handleClick(option.onClick)}
             >
               {option.name}
             </li>

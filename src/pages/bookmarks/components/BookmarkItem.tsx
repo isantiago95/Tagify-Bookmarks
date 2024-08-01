@@ -19,8 +19,10 @@ const BookmarkItem: React.FC<BookmarkItemProps> = ({
   contextMenuOptions = [],
 }) => {
   const { state, dispatch } = useContext(AppContext);
-  const { handleContextMenuClick, ContextMenu, contextMenu, contextMenuRef } =
-    useContextMenu();
+  const { handleContextMenuClick, ContextMenu, contextMenu } = useContextMenu({
+    options: contextMenuOptions,
+    bookmark: treeItem,
+  });
 
   const handleFolderClick = () => {
     dispatch({ type: 'SET_SELECTED_TREE', payload: treeItem });
@@ -122,14 +124,7 @@ const BookmarkItem: React.FC<BookmarkItemProps> = ({
               className="w-5 h-5 cursor-pointer"
               onClick={handleContextMenuClick}
             />
-            {contextMenu?.visible && (
-              <ContextMenu
-                bookmark={treeItem}
-                options={contextMenuOptions}
-                contextMenuRef={contextMenuRef}
-                contextMenu={contextMenu}
-              />
-            )}
+            {contextMenu?.visible && <ContextMenu />}
           </div>
         </li>
       );
