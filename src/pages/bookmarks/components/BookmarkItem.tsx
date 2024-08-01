@@ -1,8 +1,5 @@
 import React, { useContext } from 'react';
-import {
-  BookmarkItemProps,
-  ExtendedBookmarkTreeNode,
-} from '../../../interfaces/BookmarkProps';
+import { BookmarkItemProps } from '../../../interfaces/BookmarkProps';
 import BookmarkListItems from './BookmarkListItems';
 import { faviconUrl } from '../../../constants';
 import folderIcon from '../../../assets/images/carpeta.png';
@@ -19,9 +16,11 @@ const BookmarkItem: React.FC<BookmarkItemProps> = ({
   treeItem,
   level = 0,
   onlyFolders,
+  contextMenuOptions = [],
 }) => {
   const { state, dispatch } = useContext(AppContext);
-  const { handleContextMenuClick, ContextMenu, contextMenu } = useContextMenu();
+  const { handleContextMenuClick, ContextMenu, contextMenu, contextMenuRef } =
+    useContextMenu();
 
   const handleFolderClick = () => {
     dispatch({ type: 'SET_SELECTED_TREE', payload: treeItem });
@@ -123,7 +122,14 @@ const BookmarkItem: React.FC<BookmarkItemProps> = ({
               className="w-5 h-5 cursor-pointer"
               onClick={handleContextMenuClick}
             />
-            {contextMenu?.visible && <ContextMenu bookmark={treeItem} />}
+            {contextMenu?.visible && (
+              <ContextMenu
+                bookmark={treeItem}
+                options={contextMenuOptions}
+                contextMenuRef={contextMenuRef}
+                contextMenu={contextMenu}
+              />
+            )}
           </div>
         </li>
       );

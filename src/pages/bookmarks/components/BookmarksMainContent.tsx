@@ -10,50 +10,51 @@ import {
 const options: ContextMenuOptions[] = [
   {
     name: 'Edit',
+    type: 'item',
     onClick: (bookmark: BookmarkTreeNodeProps) => {
       console.log('Option Edit clicked: ', bookmark);
     },
   },
   {
     name: 'Delete',
+    type: 'item',
     onClick: (bookmark: BookmarkTreeNodeProps) => {
       console.log('Option Delete clicked: ', bookmark);
     },
   },
-  { name: 'separator' },
+  { type: 'separator' },
   {
     name: 'Cut',
+    type: 'item',
     onClick: (bookmark: BookmarkTreeNodeProps) => {
       console.log('Option Cut clicked: ', bookmark);
     },
   },
   {
     name: 'Copy',
+    type: 'item',
     onClick: (bookmark: BookmarkTreeNodeProps) => {
       console.log('Option Copy clicked: ', bookmark);
     },
   },
-  { name: 'separator' },
+  { type: 'separator' },
   {
     name: 'Open in new tab',
-    onClick: (bookmark: BookmarkTreeNodeProps) => {
-      console.log('Option Open in new tab clicked: ', bookmark);
-      bookmarksApi.openInNewTab(bookmark?.url ?? '');
-    },
+    type: 'item',
+    onClick: (bookmark: BookmarkTreeNodeProps) =>
+      bookmarksApi.openInNewTab(bookmark?.url ?? ''),
   },
   {
     name: 'Open in new window',
-    onClick: (bookmark: BookmarkTreeNodeProps) => {
-      console.log('Option Open in new tab clicked: ', bookmark);
-      bookmarksApi.openInNewWindow(bookmark?.url ?? '');
-    },
+    type: 'item',
+    onClick: (bookmark: BookmarkTreeNodeProps) =>
+      bookmarksApi.openInNewWindow(bookmark?.url ?? ''),
   },
   {
     name: 'Open in incognito window',
-    onClick: (bookmark: BookmarkTreeNodeProps) => {
-      console.log('Option Open in new tab clicked: ', bookmark);
-      bookmarksApi.openInIncognito(bookmark?.url ?? '');
-    },
+    type: 'item',
+    onClick: (bookmark: BookmarkTreeNodeProps) =>
+      bookmarksApi.openInIncognito(bookmark?.url ?? ''),
   },
 ];
 

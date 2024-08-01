@@ -49,6 +49,7 @@ const useContextMenu = () => {
       y,
     });
   };
+
   const handleClickOutside = (event: MouseEvent) => {
     if (
       contextMenuRef.current &&
@@ -74,13 +75,7 @@ const useContextMenu = () => {
     contextMenu,
     contextMenuRef,
     handleContextMenuClick,
-    ContextMenu: ({ bookmark }: ContextMenuProps) => (
-      <ContextMenu
-        bookmark={bookmark}
-        contextMenu={contextMenu}
-        contextMenuRef={contextMenuRef}
-      />
-    ),
+    ContextMenu: (props: ContextMenuProps) => <ContextMenu {...props} />,
   };
 };
 

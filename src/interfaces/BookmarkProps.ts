@@ -1,5 +1,6 @@
 export interface ContextMenuOptions {
-  name: string;
+  name?: string;
+  type: 'item' | 'separator';
   onClick?: (bookmark: BookmarkTreeNodeProps) => void;
 }
 
